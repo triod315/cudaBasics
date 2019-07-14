@@ -29,8 +29,12 @@ int main(int argc, char ** argv){
     int sample_count=stoi(argv[1]);
     int step=stoi(argv[2]);
 
+    cout<<"Sample count: "<<sample_count<<endl;
+    cout<<"step"<<step<<endl;
+
     for (int i=0;i<sample_count;i++){
         wiriteVector(genRandomArray(step));
+        cout<<"Sample N"<<i<<" with size"<<step<<endl;
         step+=step;
     }
 
