@@ -5,7 +5,9 @@
 
 using namespace std;
 
-int N;
+int N,M;
+
+#define THREADS_PER_BLOCK 512
 
 vector<int> readVector(ifstream &fin)
 {
@@ -25,8 +27,11 @@ vector<int> readVector(ifstream &fin)
     return result;
 }
 
-__global__ void add(int*a, int*b, int*c) {
-    c[blockIdx.x] = a[blockIdx.x] + b[blockIdx.x];
+__global__ void add(int*a, int*b, int*c,int n) {
+
+    int index=threadIdx.x+blockIdx.x*blockDim.x;
+    if (index<n)
+        c[index] = a[index] + b[index];
 }
 
 void doIt(int* sample,ofstream &fout){
@@ -52,7 +57,7 @@ void doIt(int* sample,ofstream &fout){
     cudaMemcpy(d_b, b, size, cudaMemcpyHostToDevice);
 
     //launch kernel for N blocks
-    add<<<N,1>>>(d_a,d_b,d_c);
+    add<<<(N+M-1)/M,M>>>(d_a,d_b,d_c,M);
     
     cudaMemcpy(c, d_c, size, cudaMemcpyDeviceToHost);
 
@@ -68,7 +73,7 @@ void doIt(int* sample,ofstream &fout){
         std::cout<<a[i]<<"+"<<b[i]<<"="<<c[i]<<std::endl;
     }
     */
-   
+    
     //free(a);
     //free(b);
     free(c);
@@ -84,12 +89,17 @@ void doIt(int* sample,ofstream &fout){
 
 
 
+
 int main(int argc, char ** argv)
 {
     cout<<"file name: "<<argv[1]<<endl;
     cout<<"Sample count: "<<argv[2]<<endl;
+    cout<<"Threads per block"<<THREADS_PER_BLOCK<<endl;
     string fileName=argv[1];
     int sample_count=stoi(argv[2]);
+
+    M=1024;
+
     //cout<<"Sample count: "<<sample_count<<endl;
     vector<int> sample;
 

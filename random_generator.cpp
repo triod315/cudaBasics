@@ -6,12 +6,10 @@ using namespace std;
 
 vector<int> genRandomArray(int n){
     vector<int> resultv;
-
     for (int i=0;i<n;i++)
     {
         resultv.push_back(rand()%1000);
     }
-
     return resultv;
 }
 
@@ -31,13 +29,13 @@ int main(int argc, char ** argv){
 
     cout<<"Sample count: "<<sample_count<<endl;
     cout<<"step"<<step<<endl;
-
+    srand(time(NULL));
     for (int i=0;i<sample_count;i++){
         wiriteVector(genRandomArray(step));
         cout<<"Sample N"<<i<<" with size"<<step<<endl;
-        step+=step;
+        step+=step/2;
     }
 
-    srand(time(NULL));
+    
     
 }
