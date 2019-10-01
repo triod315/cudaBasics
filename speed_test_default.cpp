@@ -2,12 +2,13 @@
 #include<iostream>
 #include<vector>
 #include<ctime>
+#include<math.h>
 
 using namespace std;
 
 int N;
 
-vector<int> readVector(ifstream &fin)
+vector<float> readVector(ifstream &fin)
 {
     
     //fin.open();
@@ -16,7 +17,7 @@ vector<int> readVector(ifstream &fin)
     int c;
     fin>>n;
 
-    vector<int> result;
+    vector<float> result;
     for (int i=0;i<n;i++){
         fin>>c;
         result.push_back(c);        
@@ -25,18 +26,18 @@ vector<int> readVector(ifstream &fin)
     return result;
 }
 
-void add(int*a, int*b, int*c) {
+void add(float*a, float*b, float*c) {
     for (int i=0;i<=N;i++){
-        c[i]=a[i]+b[i];
+        c[i]=sin(cos(sin(a[i])))+sin(cos(sin(b[i])));
     }
 }
 
-void doIt(int* sample,ofstream &fout){
+void doIt(float* sample,ofstream &fout){
     clock_t begin=clock();
 
-    int *a,*b,*c;  //host variables
+    float *a,*b,*c;  //host variables
     
-    int size=N*sizeof(int);
+    int size=N*sizeof(float);
 
    
     a=sample;
@@ -44,7 +45,7 @@ void doIt(int* sample,ofstream &fout){
     //b = (int *)malloc(size);
     b=sample;
 
-    c = (int *)malloc(size);
+    c = (float *)malloc(size);
 
     add(a,b,c);
 
@@ -66,7 +67,7 @@ int main(int argc, char ** argv)
     string fileName=argv[1];
     int sample_count=stoi(argv[2]);
     //cout<<"Sample count: "<<sample_count<<endl;
-    vector<int> sample;
+    vector<float> sample;
 
     ifstream fin(fileName);
     ofstream fout("result.txt");

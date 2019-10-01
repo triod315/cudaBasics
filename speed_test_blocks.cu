@@ -2,12 +2,13 @@
 #include<iostream>
 #include<vector>
 #include<ctime>
+#include<cmath>
 
 using namespace std;
 
 int N;
 
-vector<int> readVector(ifstream &fin)
+vector<float> readVector(ifstream &fin)
 {
     
     //fin.open();
@@ -16,7 +17,7 @@ vector<int> readVector(ifstream &fin)
     int c;
     fin>>n;
 
-    vector<int> result;
+    vector<float> result;
     for (int i=0;i<n;i++){
         fin>>c;
         result.push_back(c);        
@@ -25,16 +26,16 @@ vector<int> readVector(ifstream &fin)
     return result;
 }
 
-__global__ void add(int*a, int*b, int*c) {
-    c[blockIdx.x] = a[blockIdx.x] + b[blockIdx.x];
+__global__ void add(float*a, float*b, float*c) {
+    c[blockIdx.x] = sinf(cosf(sinf(a[blockIdx.x]))) + sinf(cosf(sinf(b[blockIdx.x])));
 }
 
-void doIt(int* sample,ofstream &fout){
+void doIt(float* sample,ofstream &fout){
     clock_t begin=clock();
 
-    int *a,*b,*c;  //host variables
-    int *d_a, *d_b, *d_c; //device variables
-    int size=N*sizeof(int);
+    float *a,*b,*c;  //host variables
+    float *d_a, *d_b, *d_c; //device variables
+    int size=N*sizeof(float);
 
     cudaMalloc((void**)&d_a, size);
     cudaMalloc((void**)&d_b, size);
@@ -46,7 +47,7 @@ void doIt(int* sample,ofstream &fout){
     //b = (int *)malloc(size);
     b=sample;
 
-    c = (int *)malloc(size);
+    c = (float *)malloc(size);
 
     cudaMemcpy(d_a, a, size, cudaMemcpyHostToDevice);
     cudaMemcpy(d_b, b, size, cudaMemcpyHostToDevice);
@@ -91,7 +92,7 @@ int main(int argc, char ** argv)
     string fileName=argv[1];
     int sample_count=stoi(argv[2]);
     //cout<<"Sample count: "<<sample_count<<endl;
-    vector<int> sample;
+    vector<float> sample;
 
     ifstream fin(fileName);
     ofstream fout("result.txt");

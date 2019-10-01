@@ -2,6 +2,7 @@
 #include<iostream>
 #include<vector>
 #include<ctime>
+#include<cuda.h>
 
 using namespace std;
 
@@ -31,7 +32,7 @@ __global__ void add(int*a, int*b, int*c,int n) {
 
     int index=threadIdx.x+blockIdx.x*blockDim.x;
     if (index<n)
-        c[index] = a[index] + b[index];
+        c[index] = a[index] * b[index];
 }
 
 void doIt(int* sample,ofstream &fout){
